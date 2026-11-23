@@ -1,40 +1,40 @@
 # Poyehali
 
-Give a coding agent this repository's link while it is working in a new or existing project. It will inspect the project, ask about the decisions that are still open, and write the instructions the next agent will use.
+Дай агенту ссылку на Poyehali, когда нужно настроить новый или существующий проект. Агент изучит код и документацию, уточнит то, чего не хватает для настройки, и запишет правила для следующих сессий.
 
-[Быстрый старт на русском](docs/quick-start.ru.md)
+[Быстрый старт с примерами](docs/quick-start.ru.md)
 
-## Use it
+## Как начать
 
-Open the **target project** in your agent. Paste this message, optionally followed by the project brief and any choices you have already made.
+Открой в агенте **проект, который хочешь настроить**, и отправь ему этот запрос. Если уже выбрал стек или знаешь, что должно получиться, добавь это сразу.
 
-> Set up this project using https://github.com/whitewolf06/poyehali. Start with the agent rules.
+> Настрой этот репозиторий по https://github.com/whitewolf06/poyehali. Начни с правил для агента.
 
-Read [`skills/poyehali/SKILL.md`](skills/poyehali/SKILL.md) and load the relevant references from the same Git revision. Apply them in the open project. If the agent cannot fetch GitHub, point it to a local checkout of this repository instead. For reproducible runs, use a tag or commit URL.
+Агент начинает с инструкции `SKILL.md`, читает нужные материалы из той же Git-ревизии и применяет их в открытом проекте. Если GitHub недоступен, укажи путь к локальной копии Poyehali. Чтобы повторить настройку с той же версией скилла, используй ссылку на тег или коммит. [Инструкция для агента](skills/poyehali/SKILL.md)
 
-## Choose the result
+## Что получишь
 
-| Mode | Result in your project |
+| Режим | Результат |
 | --- | --- |
-| **Agent rules** (default) | Project-local instructions, architecture, coding standards, and a verification guide. |
-| **Rules + configs** | Rules plus applicable lint, type-check, test, and CI configuration. |
-| **Rules + local app** | Rules and tooling plus a minimal runnable UI, API, or pair, with a local smoke test. |
+| **Каркас для агента** (по умолчанию) | `AGENTS.md`, описание архитектуры, правила кода и руководство по проверкам. |
+| **Каркас + конфиги** | Каркас и применимые настройки линтера, проверки типов, тестов и CI. |
+| **Каркас + базовое приложение** | Правила, настройки и локально запускаемый интерфейс, API или их связка. Агент делает smoke-проверку. |
 
-The agent previews the edits, preserves existing project conventions and working changes, and reports the checks it actually ran. For continuing work, the target's `AGENTS.md` routes agents to the local architecture, coding standards, and verification guide. It can point to documentation that already exists.
+Перед правками агент показывает список изменений. В существующем проекте он учитывает принятые соглашения и сохраняет твои рабочие правки. После настройки сообщает, какие проверки запустил и с каким результатом. В следующих сессиях агенты найдут нужные правила и команды через `AGENTS.md`. Он может вести к документам, которые уже есть в проекте.
 
-For a new Vue project, the recommended UI kit is [Legato UI](https://github.com/whitewolf06/legato-ui). The [Vue profile](skills/poyehali/references/vue.md) covers Vite SPA, Nuxt prerendering and SSR, and Nuxt server routes. For an independent API, choose [Python/FastAPI](skills/poyehali/references/python.md) or [Go](skills/poyehali/references/go.md). Existing or explicitly selected stacks use their own tools and conventions.
+Для нового Vue-проекта Poyehali предлагает Legato UI. В профиле Vue описаны SPA на Vite, пререндеринг и SSR в Nuxt, а также серверные маршруты Nuxt. Для отдельного API можно выбрать Python с FastAPI или Go. Если стек уже выбран, агент опирается на его инструменты и соглашения. [Legato UI](https://github.com/whitewolf06/legato-ui) · [Vue](skills/poyehali/references/vue.md) · [Python/FastAPI](skills/poyehali/references/python.md) · [Go](skills/poyehali/references/go.md)
 
-## Optional skill installation
+## Установка скилла
 
-Copy the entire [`skills/poyehali`](skills/poyehali) directory from a chosen revision to the skill directory of your target project. A new session is a reliable way to check that your client picked it up.
+Установка пригодится, если хочешь вызывать скилл из проекта. Скопируй папку `skills/poyehali` целиком из выбранной Git-ревизии в каталог из таблицы. Открой новую сессию, чтобы проверить, что клиент увидел скилл. [Папка скилла](skills/poyehali)
 
-| Client | Target directory | Link, adoption and follow-up |
+| Клиент | Каталог в проекте | Статус проверки |
 | --- | --- | --- |
-| [Codex](https://learn.chatgpt.com/docs/build-skills) | `.agents/skills/poyehali/` | Local desktop rehearsal passed. Standalone CLI 0.159.1 blocked at Windows shell launch. Public URL pending. |
-| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/skills.md) | `.agents/skills/poyehali/` | Pending |
-| [Antigravity](https://antigravity.google/docs/skills) | `.agents/skills/poyehali/` | Pending |
-| [Claude Code](https://code.claude.com/docs/en/skills) | `.claude/skills/poyehali/` | Pending |
+| [Codex](https://learn.chatgpt.com/docs/build-skills) | `.agents/skills/poyehali/` | Локальный прогон в Codex Desktop прошёл. Отдельный CLI 0.159.1 остановился на запуске оболочки Windows. Прогон по GitHub-ссылке предстоит. |
+| [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness/blob/master/docs/subsystems/skills.md) | `.agents/skills/poyehali/` | Ожидает проверки |
+| [Antigravity](https://antigravity.google/docs/skills) | `.agents/skills/poyehali/` | Ожидает проверки |
+| [Claude Code](https://code.claude.com/docs/en/skills) | `.claude/skills/poyehali/` | Ожидает проверки |
 
-For Claude sessions that load `CLAUDE.md`, request an import of the shared rules into that file. This keeps Claude-specific guidance in place and uses one copy of the project rules. [Claude project instructions](https://code.claude.com/docs/en/memory#share-one-file-with-other-coding-tools)
+Если Claude загружает `CLAUDE.md`, попроси агента добавить в него импорт `AGENTS.md`. Так Claude прочитает общие правила вместе со своими инструкциями. [Инструкции проекта в Claude Code](https://code.claude.com/docs/en/memory#share-one-file-with-other-coding-tools)
 
-See [release acceptance](docs/acceptance.md) for the test cases and evidence. [MIT license](LICENSE).
+Сценарии и результаты проверок собраны в [приёмке релиза](docs/acceptance.md). Проект распространяется по [лицензии MIT](LICENSE).
