@@ -9,7 +9,7 @@ Use this reference after resolving the project scope, stack, and setup mode. Wri
 | Agent instructions and reading order | `AGENTS.md` | Root and scoped agent instructions |
 | Responsibilities and architecture decisions | `docs/architecture.md` | Architecture overview, module map, or active decision records |
 | Implementation conventions | `docs/coding-standards.md` | Development guide, contributing guide, or stack-specific rules |
-| Commands and acceptance criteria | `docs/quality.md` | Test guide, contributor checks, or CI documentation |
+| Commands, acceptance criteria, and Git workflow | `docs/quality.md` | Test guide, contributor guide, or CI documentation |
 
 Keep an existing document as the canonical source when it already serves the purpose. One existing guide may cover several subjects. Link directly to its relevant sections and add missing information there. Use the default path when the subject has no suitable home and the path is available. Change only the sections relevant to the agreed scope.
 
@@ -29,6 +29,7 @@ Adapt this section to the actual project. Its example links assume the default p
 - Keep changes within the requested feature and preserve unrelated work. Agree changes to shared interfaces, ownership, or the requested scope before implementing them.
 - Before finishing a code change, review the size and responsibilities of the changed source. Follow the thresholds and report findings as described in the coding standards.
 - Run the available checks that cover the changed behavior. In your summary name the actual commands and results, and explain any required check you could not run.
+- Check Git status before editing and follow the [local Git workflow](docs/quality.md#git-workflow) before making a commit.
 <!-- poyehali:end -->
 ```
 
@@ -83,6 +84,10 @@ Use this form for each applicable check.
 - `planned` — A required setup, test surface, or implementation is still missing. Name what is missing and label any suggested command as planned.
 
 Availability describes the project. Execution results belong in the setup report as `passed`, `failed`, `blocked`, or `not run`, supported by commands actually attempted and the relevant output. Preserve existing failing checks and report them separately from any regression caused by setup. Keep transient logs and run results out of the standing rules.
+
+### Git workflow
+
+Write the project-specific [Git workflow](git.md) into the local quality or contributor guide and link to it from `AGENTS.md`. Reuse established project rules. For the default workflow, persist the initial worktree check, the choice to commit or review the diff, explicit approval after review, and the exception for a task that already includes commit authorization. Record selective staging, the message format, and separate authorization for push. The local rules must be usable without reading Poyehali again.
 
 ## Maintain the rules
 

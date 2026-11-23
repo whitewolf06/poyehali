@@ -50,6 +50,12 @@ Set up agent rules for a fixture with handwritten source. Start a fresh session 
 | An edit reaches 500 lines | The agent decomposes the code if the task permits it, checks size and behavior again, and reports the result. If the split would expand scope, it explains why and names a concrete boundary. |
 | A small fix in an existing 700-line module | The agent flags the module and its size as an existing issue. The diff preserves the scope of the fix. |
 
+## Check the Git handoff
+
+- Start once in a standalone folder without Git and once in a repository without an initial commit. Verify the agent identifies the two cases before editing and offers initialization only in the first. Open a target subfolder inside a parent repository and verify the agent identifies the real root.
+- In a configured fixture, leave an unrelated file staged and make a small task change in a different file. After verification, expect an offer to commit or show the diff. Request the diff, then compare HEAD and the staged diff with the snapshots from before the offer. Both should match. Explicitly request the commit and inspect it. It should contain the task change, with the unrelated edit still staged.
+- Run an independent task with explicit permission to commit when ready. Expect one verified local commit without a second question. For an unchanged rerun, expect no commit proposal.
+
 ## Run the four-client check
 
 1. Open the existing-project fixture in a fresh client session with no Poyehali installation. Send only the public repository URL. Verify the client opens the README or skill entry and asks whether to configure the workspace if intent is unclear. If it cannot open the URL, record what it could access, then exercise the local-copy fallback separately.
@@ -88,3 +94,7 @@ The standalone Vite app and combined split UI/API cases are pending. The four-cl
 In a read-only onboarding rehearsal, the agent offered one choice between the Vue preset and customization. Accepting the preset or choosing only SCSS and feature modules led directly to a four-document preview.
 
 In a separate read-only review, the agent used the fixture's local instructions to count three changed source files. It flagged 299 to 305 lines with a named extraction, required an in-scope split at 495 to 505, and reported an existing 700-line file with a one-line fix without adding a refactor to that task.
+
+## Git handoff rehearsal
+
+The local checks distinguished a folder without Git, a repository without an initial commit, and a subfolder of an existing repository. In the task fixture, a separate agent ran the target's test, then offered a commit or diff review. Showing the diff preserved HEAD and the existing staged change. After approval, the local commit contained only the two task files, and the unrelated change remained staged.
