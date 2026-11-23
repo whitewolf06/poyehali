@@ -1,10 +1,10 @@
-# Apply Agent Starter
+# Apply Poyehali
 
 ## Prepare and preview
 
 - Render the result for the decisions already made. Name the target, mode, and each intended create or edit. List the checks you can actually run and any prerequisites. Mark already-satisfied items as unchanged and omit them from the writes.
-- Find the project-owned document serving each purpose in [the document formats](documents.md). In an existing `AGENTS.md`, add or amend at most one section between the exact `<!-- agent-starter:start -->` and `<!-- agent-starter:end -->` markers. Keep existing content and ordering outside it. If the current file already routes readers to the right rules and meets the outcome, keep it byte-for-byte.
-- Treat an existing managed section as project content. Preserve additions and update only text affected by a resolved decision. Reuse the recorded Starter version on identical reruns. Record an upgrade only when the user requests it or has accepted the resulting substantive change. Avoid timestamps, generated progress logs, and formatting churn.
+- Find the project-owned document serving each purpose in [the document formats](documents.md). In an existing `AGENTS.md`, add or amend at most one section using the markers defined there. Keep existing content and ordering outside it. If the current file already routes readers to the right rules and meets the outcome, keep it byte-for-byte.
+- Treat an existing managed section as project content. Preserve additions and update only text affected by a resolved decision. Reuse the recorded Poyehali version on identical reruns. Record an upgrade only when the user requests it or has accepted the resulting substantive change. Avoid timestamps, generated progress logs, and formatting churn.
 - Work in the authorized directory. For a split project with more than one Git root, change each explicitly authorized location only when it is available. Record the other side as planned when it is outside the available workspace.
 
 ## Write safely

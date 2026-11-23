@@ -1,12 +1,12 @@
 ---
-name: agent-starter
-description: Set up agent instructions and engineering practices in a new or existing code repository, with optional tooling configuration or a minimal local application. Use when asked to apply Agent Starter, onboard coding agents, or establish a project's architecture, coding rules, and verification baseline. Routine feature work follows the target repository's own instructions.
+name: poyehali
+description: Set up agent instructions and engineering practices in a new or existing code repository, with optional tooling configuration or a minimal local application. Use when asked to apply Poyehali, onboard coding agents, or establish a project's architecture, coding rules, and verification baseline. Routine feature work follows the target repository's own instructions.
 license: MIT
 ---
 
-# Agent Starter
+# Poyehali
 
-The outcome is a target repository whose next agent can find its rules, boundaries, and checks locally. Read this file directly when the user shares the Starter URL or a local checkout. Installation is optional. If reading a remote source, resolve the requested tag or branch to one commit and read references at that commit. Keep the Starter checkout separate from the target workspace.
+The outcome is a target repository whose next agent can find its rules, boundaries, and checks locally. Read this file directly when the user shares the Poyehali URL or a local checkout. Installation is optional. If reading a remote source, resolve the requested tag or branch to one commit and read references at that commit. Keep the Poyehali checkout separate from the target workspace.
 
 ## Workflow
 

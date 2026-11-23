@@ -1,10 +1,10 @@
 # Release acceptance
 
-Onboarding depends on the coding client as well as the instructions. Test the [portable skill](../skills/agent-starter/SKILL.md) in fresh chats and inspect the target worktree after each run.
+Onboarding depends on the coding client as well as the instructions. Test the [portable skill](../skills/poyehali/SKILL.md) in fresh chats and inspect the target worktree after each run.
 
 ## Prepare fixtures
 
-- Use a fresh target for each case. For a local rehearsal, replace `<starter>` with the absolute path to a separate copy of this repository. For the URL test, replace it with the public GitHub repository URL and record the revision the client opened.
+- Use a fresh target for each case. For a local rehearsal, replace `<source>` with the absolute path to a separate copy of this repository. For the URL test, replace it with the public GitHub repository URL and record the revision the client opened.
 - For a new project, start in an empty directory with `git init`. For shared-stack cases, install only the runtimes the chosen preset needs. Record their versions and leave packages or external test services unavailable if the case is meant to exercise a blocked check.
 - For the existing-project cases, use a disposable Git repository with the files below. Commit the fixture, then append `// LOCAL: keep this edit` to `index.cjs` and create an untracked `local-note.txt`. Use a separate copy for the conflict case.
 
@@ -13,7 +13,7 @@ Onboarding depends on the coding client as well as the instructions. Test the [p
 | `AGENTS.md` | `# Agent rules` and `Read docs/development.md before changing code.` |
 | `docs/development.md` | `# Development`, `Run npm test from the repository root.`, and `Put new tests under test/ with a .test.cjs suffix.` |
 | `docs/architecture.md` | `# Architecture` and `This repository contains a Node.js utility in index.cjs.` |
-| `package.json` | `{"name":"starter-adoption-fixture","private":true,"scripts":{"test":"node --test"}}` |
+| `package.json` | `{"name":"poyehali-adoption-fixture","private":true,"scripts":{"test":"node --test"}}` |
 | `index.cjs` | `exports.total = values => values.reduce((sum, value) => sum + value, 0);` |
 | `test/total.test.cjs` | `require('node:test')('sums two numbers', () => require('node:assert/strict').equal(require('../index.cjs').total([1, 2]), 3));` |
 | `.github/workflows/checks.yml` | A workflow with a pull request trigger and a job that checks out the repository, sets up Node.js, and runs `npm test`. |
@@ -22,7 +22,7 @@ Save `git status --short --untracked-files=all` before and after each run. For a
 
 ## Exercise the skill
 
-Start each prompt with `Use Agent Starter at <starter> to configure this project.` Then add the text for the case. Use any questions the client asks as part of the test.
+Start each prompt with `Use Poyehali at <source> to configure this project.` Then add the text for the case. Use any questions the client asks as part of the test.
 
 | Case | Prompt continuation | Pass when |
 | --- | --- | --- |
@@ -41,10 +41,10 @@ In any case with a pre-existing failing command, capture the baseline and let th
 
 ## Run the four-client check
 
-1. Open the existing-project fixture in a fresh client session with no Agent Starter installation. Send only the public repository URL. Verify the client opens the README or skill entry and asks whether to configure the workspace if intent is unclear. If it cannot open the URL, record what it could access, then exercise the local-copy fallback separately.
+1. Open the existing-project fixture in a fresh client session with no Poyehali installation. Send only the public repository URL. Verify the client opens the README or skill entry and asks whether to configure the workspace if intent is unclear. If it cannot open the URL, record what it could access, then exercise the local-copy fallback separately.
 2. In a separate fresh session on the same fixture, send the existing-project prompt with the public URL. Verify the resulting rules and diff. If testing a repo-local Claude adapter, inspect the active `CLAUDE.md` or native `AGENTS.md` loading for that version and record which path was actually used.
-3. Start another fresh session in the configured project and send `Add a regression test that proves total([]) returns 0.` Confirm that the agent finds the local guidance without the Starter URL, puts the test under `test/`, runs `npm test`, and keeps prior edits.
-4. Record the client version and surface, starter revision, observed diff, command results and blockers. Use `pass`, `fail`, `blocked`, or `pending` for each scenario. Keep evidence free of credentials and machine-specific secrets.
+3. Start another fresh session in the configured project and send `Add a regression test that proves total([]) returns 0.` Confirm that the agent finds the local guidance without the Poyehali URL, puts the test under `test/`, runs `npm test`, and keeps prior edits.
+4. Record the client version and surface, Poyehali revision, observed diff, command results and blockers. Use `pass`, `fail`, `blocked`, or `pending` for each scenario. Keep evidence free of credentials and machine-specific secrets.
 
 | Client | Version tested | URL and onboarding | Follow-up task |
 | --- | --- | --- | --- |

@@ -17,18 +17,18 @@ Use repository-relative links to real files and headings. Record facts from the 
 
 ## Agent instructions
 
-In an existing `AGENTS.md`, put Starter's additions in a single section bounded by `<!-- agent-starter:start -->` and `<!-- agent-starter:end -->` on separate lines. Reuse the same section on subsequent runs and preserve instructions outside it. Any rule already covered elsewhere in the file can be omitted from the new section. In a new project use the same markers under a single `# Agent instructions` heading.
+In an existing `AGENTS.md`, put Poyehali's additions in a single section bounded by `<!-- poyehali:start -->` and `<!-- poyehali:end -->` on separate lines. An existing pair of `<!-- agent-starter:start -->` and `<!-- agent-starter:end -->` marks the same section. Reuse that pair in place when present. Treat mixed or duplicated pairs as a conflict. Preserve instructions outside the section and omit rules already covered elsewhere in the file. In a new project put the section under a single `# Agent instructions` heading.
 
 Adapt this section to the actual project. Its example links assume the default paths.
 
 ```markdown
-<!-- agent-starter:start -->
+<!-- poyehali:start -->
 ## Working in this project
 
 - Read [architecture](docs/architecture.md) before changing a module boundary, [coding standards](docs/coding-standards.md) for the code you touch, and [quality checks](docs/quality.md) before reporting results. Read scoped instructions for the directories you edit.
 - Keep changes within the requested feature and preserve unrelated work. Agree changes to shared interfaces, ownership, or the requested scope before implementing them.
 - Run the available checks that cover the changed behavior. In your summary name the actual commands and results, and explain any required check you could not run.
-<!-- agent-starter:end -->
+<!-- poyehali:end -->
 ```
 
 Add one or two essential project-specific rules when an agent needs them on every task. Keep details and examples in the owning document. A scoped `AGENTS.md` makes sense when a service or package has a distinct owner, constraints, or check commands. Link it from the root when needed for discovery. In the scoped file, name its directory and add only the relevant differences, using links relative to that file. Check how the selected client loads nested instructions and have the root direct agents to read them before editing when needed.
@@ -42,7 +42,7 @@ Use the following headings where the corresponding decisions apply.
 - **Purpose and scope** — State the outcome and audience in one or two sentences. Name important external dependencies or existing interfaces.
 - **Current or planned shape** — Record the selected components, stack, and repository layout. For UI projects, name the routes that need indexing and the selected client, static, server, or hybrid rendering mode. For UI plus API, distinguish repository layout from runtime boundaries.
 - **Module and data boundaries** — List the main components with their responsibilities, allowed dependencies, shared interfaces, and data owners. For split projects, spell out which side owns API validation and which side consumes the contract. Name the code directories only when known or explicitly planned.
-- **Decisions** — Record choices and why they matter. Link to any existing decision records. Mark each relevant planned decision or undecided boundary explicitly. Add the source tag or commit of Agent Starter, or `local checkout` if the source has no known revision. Keep the version stable on a rerun with unchanged decisions unless the user requested a source update.
+- **Decisions** — Record choices and why they matter. Link to any existing decision records. Mark each relevant planned decision or undecided boundary explicitly. Add the source tag or commit of Poyehali, or `local checkout` if the source has no known revision. Keep the version stable on a rerun with unchanged decisions unless the user requested a source update.
 
 ## Coding standards
 
