@@ -1,0 +1,73 @@
+# Release acceptance
+
+Onboarding depends on the coding client as well as the instructions. Test the [portable skill](../skills/agent-starter/SKILL.md) in fresh chats and inspect the target worktree after each run.
+
+## Prepare fixtures
+
+- Use a fresh target for each case. For a local rehearsal, replace `<starter>` with the absolute path to a separate copy of this repository. For the URL test, replace it with the public GitHub repository URL and record the revision the client opened.
+- For a new project, start in an empty directory with `git init`. For shared-stack cases, install only the runtimes the chosen preset needs. Record their versions and leave packages or external test services unavailable if the case is meant to exercise a blocked check.
+- For the existing-project cases, use a disposable Git repository with the files below. Commit the fixture, then append `// LOCAL: keep this edit` to `index.cjs` and create an untracked `local-note.txt`. Use a separate copy for the conflict case.
+
+| File | Fixture content |
+| --- | --- |
+| `AGENTS.md` | `# Agent rules` and `Read docs/development.md before changing code.` |
+| `docs/development.md` | `# Development`, `Run npm test from the repository root.`, and `Put new tests under test/ with a .test.cjs suffix.` |
+| `docs/architecture.md` | `# Architecture` and `This repository contains a Node.js utility in index.cjs.` |
+| `package.json` | `{"name":"starter-adoption-fixture","private":true,"scripts":{"test":"node --test"}}` |
+| `index.cjs` | `exports.total = values => values.reduce((sum, value) => sum + value, 0);` |
+| `test/total.test.cjs` | `require('node:test')('sums two numbers', () => require('node:assert/strict').equal(require('../index.cjs').total([1, 2]), 3));` |
+| `.github/workflows/checks.yml` | A workflow with a pull request trigger and a job that checks out the repository, sets up Node.js, and runs `npm test`. |
+
+Save `git status --short --untracked-files=all` before and after each run. For a fixture with a commit, save `git diff HEAD --` too. Inspect untracked files separately, including all generated files in a new project. Reset a case by opening a fresh copy of the fixture.
+
+## Exercise the skill
+
+Start each prompt with `Use Agent Starter at <starter> to configure this project.` Then add the text for the case. Use any questions the client asks as part of the test.
+
+| Case | Prompt continuation | Pass when |
+| --- | --- | --- |
+| Default scope and complete inputs | `This is a new internal UI for viewing inventory. It uses Vue, TypeScript, Vite, pnpm and Legato UI. It has one browser-only app, an existing external HTTP API, and no indexed URLs. Use the default setup mode and apply it.` | The agent asks zero setup questions. It writes the local rules, architecture and checks guidance. App files, configs, dependencies and CI are absent. Checks that need an implementation are recorded as planned. |
+| Conditional interview | `This is a small Vue public catalog with Legato UI. Its public product URLs need search indexing, and there is also a private admin area. Use the agent rules mode. Ask only questions whose answers would change the recommendation.` | The agent uses the given UI, audience, SEO scope and mode. It announces the number of questions in the round, asks at most three, and recommends an answer to each. In one run answer `Product data is known at build time`. In a fresh run answer `Product data changes on each request, and a server runtime is allowed`. Verify prerender and SSR respectively, with an explicit rendering choice for admin. |
+| Configs | `Set up a new internal Vue/Vite project for managing personal bookmarks with TypeScript, Legato UI and pnpm. It is an SPA with no backend. Choose the configs mode and apply it.` | The agent creates the docs and selected tooling configuration. There is no application entry point, feature, or synthetic passing test. The report distinguishes runnable checks from checks waiting for source or a browser app. |
+| Local Vue scaffold | `Set up a new Vue/Vite and Legato UI SPA for personal bookmarks with TypeScript and pnpm. No public indexing and no backend. Choose the local application scaffold and apply it.` | A minimal Legato UI app installs and runs locally. Build, typechecking, the unit check and one Playwright smoke can be run from the documented commands. Report any unavailable tool or browser as blocked. |
+| Local Nuxt scaffold | `Set up a new Vue/Nuxt app for a public catalog with Legato UI and pnpm. Product pages need HTML based on request-time data. The app has a small integrated API under server/api and can run on a Node server. Choose the local application scaffold and apply it.` | The local smoke verifies the integrated endpoint, public HTML on the initial response and a hydrated interaction. |
+| Separate API | `Set up a personal bookmarks project with an internal Vite/Vue and Legato UI frontend, pnpm, and a separate HTTP backend in the same Git repository. Use [FastAPI / Go with net/http]. No database or indexable routes. Choose the local application scaffold and apply it.` | Run twice with separate fixtures and one explicit backend each time. The result includes only the selected backend, a documented API boundary, and a local smoke through that boundary. Checks use Ruff and pytest for Python or gofmt, vet and Go tests for Go. |
+| Existing project and rerun | `This is an existing Node.js utility. Adopt the default agent rules mode and apply it. Keep my existing tools and local edits.` | The agent routes to existing architecture and development docs, retains the custom test command and existing instructions, and preserves the tracked edit and untracked note. Rerun the same task in a fresh chat. File contents and Git status are identical to the first result. |
+| Changed file at apply | `Adopt the default agent rules mode for this existing project. Show the proposed file changes and pause before applying them.` | Once the agent shows its preview, append a distinctive line to a file it planned to edit and reply `Apply that plan, preserving the change I just made.` It reports the stale path, preserves the new line, and applies only independent changes that remain in scope. |
+
+For an ambiguous scope in a new project, also try `Set up an internal inventory UI. It will use Vue/Vite, pnpm and Legato UI, with no backend or SEO. Show my options before applying.` The presented choices are agent rules, rules plus configs, and rules plus local scaffold. Agent rules are recommended. Reply `Use the recommended option` and verify the rules-only output.
+
+In any case with a pre-existing failing command, capture the baseline and let the command fail. A reported existing failure must correspond to an observed run. An unrun command must remain unverified.
+
+## Run the four-client check
+
+1. Open the existing-project fixture in a fresh client session with no Agent Starter installation. Send only the public repository URL. Verify the client opens the README or skill entry and asks whether to configure the workspace if intent is unclear. If it cannot open the URL, record what it could access, then exercise the local-copy fallback separately.
+2. In a separate fresh session on the same fixture, send the existing-project prompt with the public URL. Verify the resulting rules and diff. If testing a repo-local Claude adapter, inspect the active `CLAUDE.md` or native `AGENTS.md` loading for that version and record which path was actually used.
+3. Start another fresh session in the configured project and send `Add a regression test that proves total([]) returns 0.` Confirm that the agent finds the local guidance without the Starter URL, puts the test under `test/`, runs `npm test`, and keeps prior edits.
+4. Record the client version and surface, starter revision, observed diff, command results and blockers. Use `pass`, `fail`, `blocked`, or `pending` for each scenario. Keep evidence free of credentials and machine-specific secrets.
+
+| Client | Version tested | URL and onboarding | Follow-up task |
+| --- | --- | --- | --- |
+| Codex | CLI 0.159.1 attempted | Public URL pending. Local CLI blocked at Windows shell launch. | Local desktop-agent rehearsal passed. Fresh standalone client pending. |
+| DeepSeek Harness | Pending | Pending | Pending |
+| Antigravity | Pending | Pending | Pending |
+| Claude Code | Pending | Pending | Pending |
+
+Before tagging a release, validate the skill frontmatter and local Markdown references, run the fixture cases, and carry the observed client results into the README. Keep an untested client or scenario marked as pending.
+
+## Local rehearsal on 2026-11-23
+
+| Scenario | Observed result |
+| --- | --- |
+| Skill manifest and references | The skill validator passed. Internal Markdown links resolved. |
+| Rules only, new Vue project | The desktop agent worked from the local checkout. It asked zero questions for complete input and created exactly the four rule documents. Checks that needed app code were marked planned. |
+| Vue/Vite configs only | The agent generated a pnpm lockfile and installed with a frozen lockfile. ESLint and the configuration type check passed, and Vite loaded the Vue plugin. The fixture contains no app entry point, tests, or CI jobs that depend on them. |
+| Conditional rendering interview | A separate desktop agent reused the supplied scope, Vue stack, and public routes. Build-time data and static hosting led to Nuxt prerendering. Request-time data and a server runtime led to SSR. Both previews kept the private admin behind the existing access boundary. |
+| Adoption and rerun | With a dirty Node.js fixture, the agent reused the existing architecture and development docs, kept custom commands and user edits, and produced identical file hashes and Git status on repeat. `npm test` passed. |
+| Stale planned path | A line was appended to `AGENTS.md` after the preview. The agent preserved the file and applied independent doc edits. Existing instruction links still resolved. |
+| Follow-up on local rules | A separate desktop agent received only the target folder and test request. It followed `AGENTS.md` and the development guide, added one test, and ran the prescribed `npm test` successfully. |
+| FastAPI app recipe | `uv sync --locked` produced an isolated environment. Ruff lint and format checks on `app/` and `tests/` passed, the pytest module invocation passed, and a local Uvicorn server returned HTTP 200 and the expected JSON at `GET /api/health`. |
+| Go app recipe | Go 1.27.4 ran the formatting, vet, and test checks and built the standalone API. The built process returned HTTP 200 and the expected JSON at `GET /api/health`. |
+| Nuxt SSR with Legato UI | With cached dependencies, the app passed the production build, typecheck, ESLint, and two unit tests. The built Node artifact served server-rendered content and the health response. Two Playwright tests passed in Microsoft Edge, including an interaction with the hydrated Legato control. The clean generator and lockfile path remains blocked by npm download and cache errors. |
+
+The standalone Vite app and combined split UI/API cases are pending. The four-client public URL check is tracked separately above.
