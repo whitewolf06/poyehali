@@ -27,6 +27,7 @@ Adapt this section to the actual project. Its example links assume the default p
 
 - Read [architecture](docs/architecture.md) before changing a module boundary, [coding standards](docs/coding-standards.md) for the code you touch, and [quality checks](docs/quality.md) before reporting results. Read scoped instructions for the directories you edit.
 - Keep changes within the requested feature and preserve unrelated work. Agree changes to shared interfaces, ownership, or the requested scope before implementing them.
+- Before finishing a code change, review the size and responsibilities of the changed source. Follow the thresholds and report findings as described in the coding standards.
 - Run the available checks that cover the changed behavior. In your summary name the actual commands and results, and explain any required check you could not run.
 <!-- poyehali:end -->
 ```
@@ -40,7 +41,7 @@ For Claude Code, leave a working instruction setup in place. When the selected c
 Use the following headings where the corresponding decisions apply.
 
 - **Purpose and scope** — State the outcome and audience in one or two sentences. Name important external dependencies or existing interfaces.
-- **Current or planned shape** — Record the selected components, stack, and repository layout. For UI projects, name the routes that need indexing and the selected client, static, server, or hybrid rendering mode. For UI plus API, distinguish repository layout from runtime boundaries.
+- **Current or planned shape** — Record the selected stack and layout. For UI projects, name the roles of routes, UI, state, application or domain code, and I/O. Record why shared state needs a store when one is chosen. Name the routes that need indexing and their rendering mode. For UI plus API, distinguish repository layout from runtime boundaries.
 - **Module and data boundaries** — List the main components with their responsibilities, allowed dependencies, shared interfaces, and data owners. For split projects, spell out which side owns API validation and which side consumes the contract. Name the code directories only when known or explicitly planned.
 - **Decisions** — Record choices and why they matter. Link to any existing decision records. Mark each relevant planned decision or undecided boundary explicitly. Add the source tag or commit of Poyehali, or `local checkout` if the source has no known revision. Keep the version stable on a rerun with unchanged decisions unless the user requested a source update.
 
@@ -49,14 +50,26 @@ Use the following headings where the corresponding decisions apply.
 Include rules an agent can apply to a concrete edit. Choose the sections and rules that match the actual stack. Point to existing representative code, conventions, and tool configuration where available.
 
 - **Location and ownership** — Explain where a route, reusable UI component, state transition, request handler, or persistence change belongs. Name the established interface used to cross a module boundary.
-- **Change conventions** — Cover typing and validation at boundaries, error handling, dependency additions, and behavior changes. Add relevant stack-specific expectations such as accessible UI states, SSR-safe code, isolated domain logic, or migrations.
+- **Change conventions** — Cover typing and validation at boundaries, error handling, dependency additions, and behavior changes. Record the lint preset, styling approach, and any stack-specific expectations such as accessible UI states, SSR-safe code, isolated domain logic, or migrations.
 - **Interfaces and compatibility** — State how API or data contract changes get versioned, tested, or agreed when the project has that contract. Keep executable commands in the quality guide, linking to it from here as needed.
 
 Use the selected stack references as a starting point and preserve verified local conventions. Where the project is still planned, express selected decisions as rules for the first implementation and avoid invented examples of existing code.
 
+### Review size and responsibility
+
+Put these checks in the project's coding standards, with a short instruction in the relevant `AGENTS.md`. Use established project thresholds where they exist and these defaults for open decisions.
+
+- Give each component, class, function, and module a single responsibility. Look for independently changing concerns such as rendering, orchestration, validation, domain decisions and I/O. Use descriptive names and clear control flow. Keep useful whitespace and avoid compressing statements to lower the count.
+- Before editing, note the size of existing files you will change. Before finishing, use the diff to identify handwritten source added or modified by this task and count its physical lines, including comments, blank lines, and all Vue SFC blocks. Compare before and after. Exclude generated, vendor, bundle, and lock files. Measure large changed components, classes, functions, and methods from their first to last line. When one contributes to a finding, give its name and size. Apply any project-specific limits for those units.
+- **301–499 lines.** Flag the file in the task summary with its before and after counts. Name a responsibility that could move into its own unit, or explain why keeping this cohesive code together serves the current task.
+- **500 lines or more.** Flag this as a stronger issue. If the task created the file at this size, took it across the threshold, or substantially grew an already oversized file, decompose it by responsibility before finishing when the split fits the task. If a split is blocked or requires expanding scope, report the constraint and the concrete boundary to extract. For a narrow fix in an already oversized file, report the existing size and concern without turning the fix into a broad refactor.
+- Extract a named unit with a clear owner, interface, or reason to change. Keep nearby code together when it serves that same purpose. Avoid numbered fragments, pass-through helpers, or moving styles simply to lower the count. Recheck the size and affected behavior after a split.
+
+These thresholds guide code review. Add an automated size gate only if the project has one or the user chooses it.
+
 ## Quality guide
 
-Record the exact command, its working directory, what it verifies, and any prerequisites. If CI already invokes it, identify the workflow and job. Document the project's criteria for focused unit tests, integration tests across real boundaries, and E2E for critical user flows. An API-only project can exercise its public HTTP surface without a browser. Record database migration or rendering checks when those features exist or are planned.
+Record the exact command, its working directory, what it verifies, and any prerequisites. If CI already invokes it, identify the workflow and job. Include the changed-source size and responsibility review as a manual completion check and point to the local coding standards. Document the project's criteria for focused unit tests, integration tests across real boundaries, and E2E for critical user flows. An API-only project can exercise its public HTTP surface without a browser. Record database migration or rendering checks when those features exist or are planned.
 
 Use this form for each applicable check.
 

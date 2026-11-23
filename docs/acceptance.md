@@ -26,8 +26,9 @@ Start each prompt with `Use Poyehali at <source> to configure this project.` The
 
 | Case | Prompt continuation | Pass when |
 | --- | --- | --- |
-| Default scope and complete inputs | `This is a new internal UI for viewing inventory. It uses Vue, TypeScript, Vite, pnpm and Legato UI. It has one browser-only app, an existing external HTTP API, and no indexed URLs. Use the default setup mode and apply it.` | The agent asks zero setup questions. It writes the local rules, architecture and checks guidance. App files, configs, dependencies and CI are absent. Checks that need an implementation are recorded as planned. |
-| Conditional interview | `This is a small Vue public catalog with Legato UI. Its public product URLs need search indexing, and there is also a private admin area. Use the agent rules mode. Ask only questions whose answers would change the recommendation.` | The agent uses the given UI, audience, SEO scope and mode. It announces the number of questions in the round, asks at most three, and recommends an answer to each. In one run answer `Product data is known at build time`. In a fresh run answer `Product data changes on each request, and a server runtime is allowed`. Verify prerender and SSR respectively, with an explicit rendering choice for admin. |
+| Default scope and complete inputs | `This is a new internal UI for viewing inventory. It uses Vite, has one browser-only app, an existing external HTTP API, and no indexed URLs. Use the default Vue frontend preset and the default setup mode. Apply it.` | The agent asks zero setup questions. It writes the local rules, architecture and checks guidance. App files, configs, dependencies and CI are absent. Checks that need an implementation are recorded as planned. |
+| Preset or customization | `This is a small new internal frontend SPA with no API. Use the agent rules mode. Show your recommendation before applying it.` | The agent previews the entire Vue preset in one choice. Accept it in one run and verify there are no repeats about style, lint, architecture or store. In a fresh run ask to customize styling and architecture, choose SCSS and feature modules, and verify the rest of the preset carries forward. |
+| Conditional interview | `This is a small Vue public catalog with the default frontend preset. Its public product URLs need search indexing, and there is also a private admin area. Use the agent rules mode. Ask only questions whose answers would change the recommendation.` | The agent uses the given UI, audience, SEO scope and mode. It announces the number of questions in the round, asks at most three, and recommends an answer to each. In one run answer `Product data is known at build time`. In a fresh run answer `Product data changes on each request, and a server runtime is allowed`. Verify prerender and SSR respectively, with an explicit rendering choice for admin. |
 | Configs | `Set up a new internal Vue/Vite project for managing personal bookmarks with TypeScript, Legato UI and pnpm. It is an SPA with no backend. Choose the configs mode and apply it.` | The agent creates the docs and selected tooling configuration. There is no application entry point, feature, or synthetic passing test. The report distinguishes runnable checks from checks waiting for source or a browser app. |
 | Local Vue scaffold | `Set up a new Vue/Vite and Legato UI SPA for personal bookmarks with TypeScript and pnpm. No public indexing and no backend. Choose the local application scaffold and apply it.` | A minimal Legato UI app installs and runs locally. Build, typechecking, the unit check and one Playwright smoke can be run from the documented commands. Report any unavailable tool or browser as blocked. |
 | Local Nuxt scaffold | `Set up a new Vue/Nuxt app for a public catalog with Legato UI and pnpm. Product pages need HTML based on request-time data. The app has a small integrated API under server/api and can run on a Node server. Choose the local application scaffold and apply it.` | The local smoke verifies the integrated endpoint, public HTML on the initial response and a hydrated interaction. |
@@ -38,6 +39,16 @@ Start each prompt with `Use Poyehali at <source> to configure this project.` The
 For an ambiguous scope in a new project, also try `Set up an internal inventory UI. It will use Vue/Vite, pnpm and Legato UI, with no backend or SEO. Show my options before applying.` The presented choices are agent rules, rules plus configs, and rules plus local scaffold. Agent rules are recommended. Reply `Use the recommended option` and verify the rules-only output.
 
 In any case with a pre-existing failing command, capture the baseline and let the command fail. A reported existing failure must correspond to an observed run. An unrun command must remain unverified.
+
+## Check decomposition in later code changes
+
+Set up agent rules for a fixture with handwritten source. Start a fresh session with the target's local instructions and a normal feature request, without providing the Poyehali URL. Use independent fixtures for these cases.
+
+| Case | Pass when |
+| --- | --- |
+| An edit exceeds 300 lines | The agent compares file size before and after. It flags the file and identifies a possible extraction by responsibility or explains why it is cohesive. |
+| An edit reaches 500 lines | The agent decomposes the code if the task permits it, checks size and behavior again, and reports the result. If the split would expand scope, it explains why and names a concrete boundary. |
+| A small fix in an existing 700-line module | The agent flags the module and its size as an existing issue. The diff preserves the scope of the fix. |
 
 ## Run the four-client check
 
@@ -71,3 +82,9 @@ Before tagging a release, validate the skill frontmatter and local Markdown refe
 | Nuxt SSR with Legato UI | With cached dependencies, the app passed the production build, typecheck, ESLint, and two unit tests. The built Node artifact served server-rendered content and the health response. Two Playwright tests passed in Microsoft Edge, including an interaction with the hydrated Legato control. The clean generator and lockfile path remains blocked by npm download and cache errors. |
 
 The standalone Vite app and combined split UI/API cases are pending. The four-client public URL check is tracked separately above.
+
+## Frontend preset and decomposition rehearsal
+
+In a read-only onboarding rehearsal, the agent offered one choice between the Vue preset and customization. Accepting the preset or choosing only SCSS and feature modules led directly to a four-document preview.
+
+In a separate read-only review, the agent used the fixture's local instructions to count three changed source files. It flagged 299 to 305 lines with a named extraction, required an in-scope split at 495 to 505, and reported an existing 700-line file with a one-line fix without adding a refactor to that task.
