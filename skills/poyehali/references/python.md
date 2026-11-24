@@ -5,6 +5,7 @@ Use this profile when a project already has a Python API or when the user select
 ## Rules for the project
 
 - Give each feature module an owner. HTTP handlers translate validated requests into application calls and shape the response. Keep domain behavior separate from routing and storage. Keep cross-module calls behind the owning module's public interface.
+- Apply the [code size and responsibility review](documents.md#review-size-and-responsibility) to Python modules, jobs, and scripts. If a router grows across responsibilities, group related endpoints by capability and move business behavior or persistence into the modules that own it.
 - Use typed boundaries and explicit FastAPI request and response models. Modify request, response, and error behavior with HTTP contract tests. In a split UI and API, keep the API as the owner of validation and data and document how the frontend consumes the contract.
 - Add PostgreSQL, SQLAlchemy, and Alembic if a relational database is chosen. Keep transaction boundaries explicit and test schema changes by applying migrations to an isolated database. Use synthetic fixtures and exercise failure paths when behavior has meaningful failure cases.
 

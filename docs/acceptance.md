@@ -42,13 +42,17 @@ In any case with a pre-existing failing command, capture the baseline and let th
 
 ## Check decomposition in later code changes
 
-Set up agent rules for a fixture with handwritten source. Start a fresh session with the target's local instructions and a normal feature request, without providing the Poyehali URL. Use independent fixtures for these cases.
+Set up agent rules for a fixture with handwritten source, styles, and content. Start a fresh session with the target's local instructions and a normal feature request, without providing the Poyehali URL. Use independent fixtures for these cases.
 
 | Case | Pass when |
 | --- | --- |
-| An edit exceeds 300 lines | The agent compares file size before and after. It flags the file and identifies a possible extraction by responsibility or explains why it is cohesive. |
-| An edit reaches 500 lines | The agent decomposes the code if the task permits it, checks size and behavior again, and reports the result. If the split would expand scope, it explains why and names a concrete boundary. |
-| A small fix in an existing 700-line module | The agent flags the module and its size as an existing issue. The diff preserves the scope of the fix. |
+| A Python or Go backend module grows to 301–499 lines | The agent compares size before and after. It flags the file and identifies a possible extraction by responsibility or explains why it is cohesive. |
+| A handwritten automation script reaches 500 lines | The agent applies the same rule as for backend code. It identifies a responsibility to extract, such as argument handling or an operation, and rechecks the behavior after an in-scope split. |
+| A Vue SFC reaches 500 lines across template, script, and styles | The agent counts all SFC blocks and decomposes the component by responsibility if the task permits it. It checks size and behavior again. If the split would expand scope, it explains why and names a concrete boundary. |
+| A small fix in an existing 700-line executable module | The agent flags the module and its size as an existing issue. The diff preserves the scope of the fix. |
+| A static HTML page over 500 lines with FAQ and JSON-LD | The agent reviews structure and cohesion. The page length alone produces no size finding or request to split it. |
+| Standalone CSS or SCSS and a data-only fixture or locale dictionary above 500 lines | The agent evaluates maintainability and responsibility. A declaration-only TS export or Python fixture is still data. File length alone produces no size finding or compression. |
+| A long HTML document with an inline JavaScript block and JSON-LD | The agent reviews the executable block separately. The surrounding HTML and JSON-LD stay under the structural review. |
 
 ## Check the Git handoff
 
@@ -94,6 +98,10 @@ The standalone Vite app and combined split UI/API cases are pending. The four-cl
 In a read-only onboarding rehearsal, the agent offered one choice between the Vue preset and customization. Accepting the preset or choosing only SCSS and feature modules led directly to a four-document preview.
 
 In a separate read-only review, the agent used the fixture's local instructions to count three changed source files. It flagged 299 to 305 lines with a named extraction, required an in-scope split at 495 to 505, and reported an existing 700-line file with a one-line fix without adding a refactor to that task.
+
+A follow-up review flagged a 512-line Vue SFC and two 325-line executable units, one in a TS module and one inline in HTML. It reviewed the 694-line static FAQ with JSON-LD, a 520-line SCSS file, and a 522-line data-only TS locale by structure and cohesion.
+
+A backend and script rehearsal flagged a 325-line Python handler and identified decomposition boundaries for a 514-line Go handler and a 762-line PowerShell script. The 522-line data-only Python fixture received a structural review.
 
 ## Git handoff rehearsal
 

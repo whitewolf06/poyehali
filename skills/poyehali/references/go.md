@@ -5,6 +5,7 @@ Use this profile for a Go API or when the user chooses Go for a separate backend
 ## Rules for the project
 
 - Start a server project with `cmd/api` for process setup and `internal` for private packages as the API grows. Put routing and request validation at the HTTP boundary. Keep domain operations and storage behind the owning package's interface. Introduce small interfaces at their consumers when a real boundary needs one.
+- Apply the [code size and responsibility review](documents.md#review-size-and-responsibility) to Go handlers, services, and commands. Related files can stay in one package. Introduce a package when it owns a distinct responsibility, such as transport or storage.
 - Pass `context.Context` through cancellable calls and operations that perform I/O. Handle errors explicitly and map them to HTTP at the handler. Keep configuration and secret values external to source. Document the API owner, response and error shapes, and local connection for a separate frontend.
 - Keep dependencies reproducible with `go.mod` and `go.sum` when present. Record the minimum compatible Go version in `go.mod`, and use a selected supported Go release in CI. Exercise changed API behavior and include isolated integration coverage when the API adds a database or another external dependency.
 
